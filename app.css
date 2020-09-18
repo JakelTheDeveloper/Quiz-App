@@ -1,0 +1,169 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap');
+
+body {
+    background-color: #413D3D;
+}
+header{
+    display: flex;
+    justify-content: center;
+    font-family: 'Fira Mono', monospace;
+}
+main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+#quiz{
+    background-color:lightblue;
+    margin:0 0 0 0;
+    border-radius: 2%;
+    font-family: 'Fira Mono', monospace;
+}
+.ready-title{
+    background-color:lightblue;
+    border-radius: 5%;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    font-family: 'Fira Mono', monospace;
+}
+
+.questions-div{
+    background-color:lightblue;
+    border-radius: 5%;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+}
+.question-counter{
+    border-radius: 5%;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    font-family: 'Fira Mono', monospace;
+}
+.question-area{
+    border-radius: 5%;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    background-color: turquoise;
+    font-family: 'Fira Mono', monospace;
+}
+.message-area1{
+    border-radius: 5%;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    font-family: 'Fira Mono', monospace;
+}
+.message-area2{
+    border-radius: 5%;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    background-color: turquoise;
+    font-size: 20px;
+    font-family: 'Fira Mono', monospace;
+}
+.answers-div{
+    border-radius: 5%;
+    background-color:teal;
+    display: flex;
+    text-align: center;
+    color: blanchedalmond;
+    display: inline-block;
+    margin-top: 20px;
+    border: 3px solid black;
+    flex-direction: column;
+    justify-content: center;
+}
+.alert-sect{
+    color: blanchedalmond;
+    border-radius: 5%;
+    padding: 10px;
+    margin-bottom: 0;
+    display: flex;
+    font-family: 'Fira Mono', monospace;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+}
+img {
+    border-radius: 20px;
+    width: 30%;
+    margin-left: 420px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+#submit{
+	font-family: sans-serif;
+	font-size: 20px;
+	background-color: #297;
+	color: #fff;
+	border: 0px;
+	border-radius: 3px;
+	padding: 10px;
+    cursor: pointer;
+	margin: 10px 0 10px 0;
+}
+.startbtn{
+	font-family: sans-serif;
+    font-size: 20px;
+    text-align: center;
+	background-color: #297;
+	color:black;
+	border: 0px;
+	border-radius: 3px;
+	padding: 10px;
+    cursor: pointer;
+    margin: 0;
+    position: absolute;
+    top: 100%;
+    left: 45%;
+}
+.nextbtn{
+	font-family: sans-serif;
+    font-size: 20px;
+    text-align: center;
+	background-color: #297;
+	color:black;
+	border: 0px;
+	border-radius: 3px;
+	padding: 10px;
+    cursor: pointer;
+    margin: 0;
+    position: absolute;
+    top: 130%;
+    left: 45%;
+}
+.continuebtn{
+	font-family: sans-serif;
+    font-size: 20px;
+    text-align: center;
+	background-color: #297;
+	color:black;
+	border: 0px;
+	border-radius: 3px;
+	padding: 10px;
+    cursor: pointer;
+    margin: 0;
+    position: absolute;
+    top: 130%;
+    left: 45%;
+}
+#submit:hover{
+	background-color: #3a8;
+}
