@@ -1,8 +1,3 @@
-
-var quizContainer = document.getElementById('quiz');
-var resultsContainer = document.getElementById('results');
-var submitButton = document.getElementById('submit');
-
 const QUIZ = {
     // 5 or more questions are required
     questions: [
@@ -61,42 +56,12 @@ const QUIZ = {
     questionNumber: 0,
     score: 0,
     message: '',
-    message2: ''
+    message2: '',
+    ansCor: false
 
 };
 
-function questionSection(questionNumber) {
-    let currentQuestion = QUIZ.questions[questionNumber].question;
-    let questionArr = QUIZ.questions.length;
-    const template =
-        `<div class = "questions-div">
-      <h2 class = "question-counter">Question #${questionNumber + 1} out of ${questionArr}</h2>
-      <h3 class = "question-area">${currentQuestion}</h3>
-      </div>
-      <div class = "Anshere"></div>
-      <div></div>`
-    return template;
-}
-
-function answerSection(questionNumber) {
-    let currentChoices = [];
-
-    for (letter in QUIZ.questions[questionNumber].answers) {
-        currentChoices.push(`<label><input type="radio" name="radio" value="${letter}"> ${letter} : ${QUIZ.questions[questionNumber].answers[letter]}</label>`)
-    }
-    // add this question and its answers to the output
-    const template = `<div class = "answers-div">${currentChoices.join(' ')}
-    </div>
-    <div></div>
-    <button class = "nextbtn">Next Question</button>`
-    return template;
-}
-
-function alertSection() {
-    const template =
-    `<div class="alert-sect"></div>`;
-    return template;
-}
+//Welcome Screen Template
 function welcomeScreen() {
     const template =
         `<div class="welcome-section"></div>
@@ -108,27 +73,43 @@ function welcomeScreen() {
     return template;
 }
 
-function resultScreen(){
-    const template =
-        `<div class="welcome-section"></div>
-    <h1 class = "ready-title">THANK YOU FOR TAKING THIS QUIZ!"</h1>
-    <h3 class = "question-area"> You Scored ${QUIZ.score} Out Of ${QUIZ.questions.length}</h3>
-    <div>
-    </div>`;
-    return template;
+//Button for start quiz
+function startQuiz(){
+    $(".startbtn").on( "click", function() {
+        QUIZ.quizStarted = true;
+        render();
+    });
 }
 
-function checkAnswer(correctAns) {
-    $(".nextbtn").click(function () {
+//Generate Question Template
+function generateQuestion(questionNumber,choices){
+    return `<div class ="questions-div">
+    <h3 class = "current-score">Current Score: ${QUIZ.score}</h3>
+    <h2 class = "question-area">${QUIZ.questions[questionNumber].question}</h2>
+    <h3 class = "question-counter">Question #${questionNumber + 1} out of ${QUIZ.questions.length}</h3>
+    </div>
+    <div class = "answers-div">
+    <form id = "questions-form">
+    ${choices.join(' ')}
+    <button type="submit" class = "nextbtn" >Continue</button>
+    </form>
+    <div class="alert-sect"></div>
+    </div>`
+}
+
+function checkAnswer() {
+    $(".nextbtn").click(function (evt) {
+        evt.preventDefault();
         let correctAns = QUIZ.questions[QUIZ.questionNumber].correctAnswer;
         let userAns = $(`input[name = "radio"]:checked`).val();
-        if(userAns === correctAns){
+        QUIZ.ansCor = userAns === correctAns;
+        if(QUIZ.ansCor){
             QUIZ.score ++;
             QUIZ.message = "You Got That Right!!!";
             QUIZ.message2 = "WOOHOOO!!!";
         }else if(userAns !== correctAns){
             QUIZ.message = "You Got That Wrong :P!!!";
-            QUIZ.message2 = "You Should Study!!!!";
+            QUIZ.message2 = "You Should Study!!!! Correct answer is: " + correctAns.toUpperCase();
         }
         if (!userAns) {
             $(".alert-sect").text("Please Select An Answer!");
@@ -142,27 +123,45 @@ function checkAnswer(correctAns) {
             }
         }
     })
-    const template = `<div class = "questions-div">
-                <h2 class = "message-area1">${QUIZ.message}</h2>
-                <h3 class = "message-area2">${QUIZ.message2}</h3>
-                </div>
-                <div class = "Anshere"></div>
-                <div></div>
-                <button class = "continuebtn">Continue</button>`;
-                return template;
 }
+
+function resultScreen(){
+    let template = '';
+    if(QUIZ.questionNumber === QUIZ.questions.length){
+         template =
+        `<div class="welcome-section"></div>
+    <h1 class = "ready-title">THANK YOU FOR TAKING THIS QUIZ!"</h1>
+    <h3 class = "question-counter"> You Scored ${QUIZ.score} Out Of ${QUIZ.questions.length}</h3>
+    <button class = "restartbtn">Try Again</button>
+    <div>
+    </div>`;
+    }else{
+         template = `<div class = "questions-div">
+         <h3 class = "current-score">Current Score: ${QUIZ.score}</h3>
+    <h2 class = "message-area1">${QUIZ.message}</h2>
+    <h3 class = "message-area2 ${!QUIZ.ansCor?'message-area2Wrong':'message-area2Right'}">${QUIZ.message2}</h3>
+    </div>
+    <div class = "Anshere"></div>
+    <div></div>
+    <button class = "continuebtn">Continue</button>`;
+    }
+    return template;
+}
+
 
 function continueQuiz(){
     $(".continuebtn").on( "click", function() {
         render();
-        console.log("clicked")
     });
 }
-function startQuiz(){
-    $(".startbtn").on( "click", function() {
-        QUIZ.quizStarted = true;
+
+function restartQuiz(){
+    $(".restartbtn").on( "click", function() {
+        QUIZ.quizStarted = false;
+        QUIZ.score = 0;
+        QUIZ.questionNumber = 0;
         render();
-        console.log("clicked")
+        startQuiz();
     });
 }
 
@@ -172,7 +171,13 @@ function render() {
         page += welcomeScreen();
     } else {
         if (QUIZ.quizStarted === true) {
-            page += questionSection(QUIZ.questionNumber) + answerSection(QUIZ.questionNumber) + alertSection();
+            let currentChoices = [];
+            for (letter in QUIZ.questions[QUIZ.questionNumber].answers) {
+                currentChoices.push(`<label><input type="radio" id = "${QUIZ.questions[QUIZ.questionNumber].answers[letter]}" name="radio" value="${letter}"> ${letter} : ${QUIZ.questions[QUIZ.questionNumber].answers[letter]}</label>`)
+            }
+            currentChoices.join(' ');
+           page += generateQuestion(QUIZ.questionNumber,currentChoices);
+            //page += questionSection(QUIZ.questionNumber) + answerSection(QUIZ.questionNumber) + alertSection();
         }
     }
     $("main").html(page);
@@ -181,8 +186,7 @@ function render() {
 
 function renderResults() {
     let page = '';
-    let correctAns = QUIZ.questions[QUIZ.questionNumber].correctAnswer;
-    page += checkAnswer(correctAns);
+    page += resultScreen();
     $("main").html(page);
     continueQuiz();
 }
@@ -191,7 +195,7 @@ function renderEnd(){
     let page = '';
     page += resultScreen();
     $("main").html(page);
-    checkAnswer();
+    restartQuiz();
 }
 
 function main() {
