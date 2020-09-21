@@ -74,15 +74,20 @@ function welcomeScreen() {
 }
 
 //Button for start quiz
-function startQuiz(){
-    $(".startbtn").on( "click", function() {
+function startQuiz() {
+    $(".startbtn").on("click", function () {
         QUIZ.quizStarted = true;
         render();
     });
 }
 
 //Generate Question Template
-function generateQuestion(questionNumber,choices){
+function generateQuestion(questionNumber) {
+    let currentChoices = [];
+    for (letter in QUIZ.questions[QUIZ.questionNumber].answers) {
+        currentChoices.push(`<label><input type="radio" id = "${QUIZ.questions[QUIZ.questionNumber].answers[letter]}" name="radio" value="${letter}"> ${letter} : ${QUIZ.questions[QUIZ.questionNumber].answers[letter]}</label>`)
+    }
+    currentChoices.join(' ');
     return `<div class ="questions-div">
     <h3 class = "current-score">Current Score: ${QUIZ.score}</h3>
     <h2 class = "question-area">${QUIZ.questions[questionNumber].question}</h2>
@@ -90,7 +95,7 @@ function generateQuestion(questionNumber,choices){
     </div>
     <div class = "answers-div">
     <form id = "questions-form">
-    ${choices.join(' ')}
+    ${currentChoices.join(' ')}
     <button type="submit" class = "nextbtn" >Continue</button>
     </form>
     <div class="alert-sect"></div>
@@ -101,45 +106,46 @@ function checkAnswer() {
     $(".nextbtn").click(function (evt) {
         evt.preventDefault();
         let correctAns = QUIZ.questions[QUIZ.questionNumber].correctAnswer;
+        let ansName = QUIZ.questions[QUIZ.questionNumber].n
         let userAns = $(`input[name = "radio"]:checked`).val();
         QUIZ.ansCor = userAns === correctAns;
-        if(QUIZ.ansCor){
-            QUIZ.score ++;
+        if (QUIZ.ansCor) {
+            QUIZ.score++;
             QUIZ.message = "You Got That Right!!!";
-            QUIZ.message2 = "WOOHOOO!!!";
-        }else if(userAns !== correctAns){
+            QUIZ.message2 = "WOOHOOO!!! The Answer Was: " + userAns.toUpperCase() + ") " + QUIZ.questions[QUIZ.questionNumber].answers[userAns];
+        } else if (userAns !== correctAns) {
             QUIZ.message = "You Got That Wrong :P!!!";
-            QUIZ.message2 = "You Should Study!!!! Correct answer is: " + correctAns.toUpperCase();
+            QUIZ.message2 = "You Should Study!!!! <br/> Correct answer is: " + correctAns.toUpperCase() + ") " + QUIZ.questions[QUIZ.questionNumber].answers[correctAns] + "<br/> " + "You Selected: " + userAns.toUpperCase() + ") " + QUIZ.questions[QUIZ.questionNumber].answers[userAns];
         }
         if (!userAns) {
             $(".alert-sect").text("Please Select An Answer!");
         } else {
             if (QUIZ.questionNumber + 1 === QUIZ.questions.length) {
-                QUIZ.questionNumber ++;
+                QUIZ.questionNumber++;
                 renderEnd();
             } else {
-                QUIZ.questionNumber ++;
+                QUIZ.questionNumber++;
                 renderResults();
             }
         }
     })
 }
 
-function resultScreen(){
+function resultScreen() {
     let template = '';
-    if(QUIZ.questionNumber === QUIZ.questions.length){
-         template =
-        `<div class="welcome-section"></div>
+    if (QUIZ.questionNumber === QUIZ.questions.length) {
+        template =
+            `<div class="welcome-section"></div>
     <h1 class = "ready-title">THANK YOU FOR TAKING THIS QUIZ!"</h1>
     <h3 class = "question-counter"> You Scored ${QUIZ.score} Out Of ${QUIZ.questions.length}</h3>
     <button class = "restartbtn">Try Again</button>
     <div>
     </div>`;
-    }else{
-         template = `<div class = "questions-div">
+    } else {
+        template = `<div class = "questions-div">
          <h3 class = "current-score">Current Score: ${QUIZ.score}</h3>
     <h2 class = "message-area1">${QUIZ.message}</h2>
-    <h3 class = "message-area2 ${!QUIZ.ansCor?'message-area2Wrong':'message-area2Right'}">${QUIZ.message2}</h3>
+    <h3 class = "message-area2 ${!QUIZ.ansCor ? 'message-area2Wrong' : 'message-area2Right'}">${QUIZ.message2}</h3>
     </div>
     <div class = "Anshere"></div>
     <div></div>
@@ -149,14 +155,14 @@ function resultScreen(){
 }
 
 
-function continueQuiz(){
-    $(".continuebtn").on( "click", function() {
+function continueQuiz() {
+    $(".continuebtn").on("click", function () {
         render();
     });
 }
 
-function restartQuiz(){
-    $(".restartbtn").on( "click", function() {
+function restartQuiz() {
+    $(".restartbtn").on("click", function () {
         QUIZ.quizStarted = false;
         QUIZ.score = 0;
         QUIZ.questionNumber = 0;
@@ -171,13 +177,7 @@ function render() {
         page += welcomeScreen();
     } else {
         if (QUIZ.quizStarted === true) {
-            let currentChoices = [];
-            for (letter in QUIZ.questions[QUIZ.questionNumber].answers) {
-                currentChoices.push(`<label><input type="radio" id = "${QUIZ.questions[QUIZ.questionNumber].answers[letter]}" name="radio" value="${letter}"> ${letter} : ${QUIZ.questions[QUIZ.questionNumber].answers[letter]}</label>`)
-            }
-            currentChoices.join(' ');
-           page += generateQuestion(QUIZ.questionNumber,currentChoices);
-            //page += questionSection(QUIZ.questionNumber) + answerSection(QUIZ.questionNumber) + alertSection();
+            page += generateQuestion(QUIZ.questionNumber);
         }
     }
     $("main").html(page);
@@ -191,7 +191,7 @@ function renderResults() {
     continueQuiz();
 }
 
-function renderEnd(){
+function renderEnd() {
     let page = '';
     page += resultScreen();
     $("main").html(page);
