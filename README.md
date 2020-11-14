@@ -10,11 +10,13 @@ Partnered with Michelle LaLonde!
 ## User Stories
 *As a user:*
 
-* I can add click start to start quiz.
+* I can click start to start the quiz
 
 * I can see a list of questions and answers when I first start the quiz
 
 * I receive appropriate feedback after answering a question
+
+* I can restart the quiz after I finish
 
 
 ## Technical Requirements
